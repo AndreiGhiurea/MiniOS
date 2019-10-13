@@ -23,11 +23,11 @@ SSL:
     mov    eax,    cr0
     or     al,     1
     mov    cr0,    eax     ; we are in protected mode but we need to set the CS register  
-    jmp    8:.bits32       ; we change the CS to 8 (index of FLAT_DESCRIPTOR_CODE32 entry)
+    jmp    SEL_CODE32:.bits32       ; we change the CS to 8 (index of FLAT_DESCRIPTOR_CODE32 entry)
 
 .bits32:
 [bits 32]
-    mov    ax,    16       ; index of FLAT_DESCRIPTOR_DATA32 entry
+    mov    ax,    SEL_DATA32       ; index of FLAT_DESCRIPTOR_DATA32 entry
     mov    ds,    ax
     mov    es,    ax      
     mov    gs,    ax      
@@ -79,11 +79,24 @@ FLAT_DESCRIPTOR_CODE32  equ 0x00CF9A000000FFFF  ; Code: Execute/Read
 FLAT_DESCRIPTOR_DATA32  equ 0x00CF92000000FFFF  ; Data: Read/Write
 FLAT_DESCRIPTOR_CODE16  equ 0x00009B000000FFFF  ; Code: Execute/Read, accessed
 FLAT_DESCRIPTOR_DATA16  equ 0x000093000000FFFF  ; Data: Read/Write, accessed
+FLAT_DESCRIPTOR_CODE64  equ 0x002F9A000000FFFF  ; Code: Execute/Read
+FLAT_DESCRIPTOR_DATA64  equ 0x00CF92000000FFFF  ; Data: Read/Write
     
+SEL_NULL                equ 0*8
+SEL_CODE32              equ 1*8
+SEL_DATA32              equ 2*8
+SEL_CODE16              equ 3*8
+SEL_DATA16              equ 4*8
+SEL_CODE64              equ 5*8
+SEL_DATA64              equ 6*8
+
+
 GDTTable:
     .null     dq 0                         ;  0
     .code32   dq FLAT_DESCRIPTOR_CODE32    ;  8
     .data32   dq FLAT_DESCRIPTOR_DATA32    ; 16
     .code16   dq FLAT_DESCRIPTOR_CODE16    ; 24
-    .data16   dq FLAT_DESCRIPTOR_DATA16    ; 32 ;TODO!!! add 64-bits descriptors
+    .data16   dq FLAT_DESCRIPTOR_DATA16    ; 32
+    .code64   dq FLAT_DESCRIPTOR_CODE64    ; 40
+    .data64   dq FLAT_DESCRIPTOR_DATA64    ; 48
     .end:

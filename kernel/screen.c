@@ -1,6 +1,7 @@
 #include "screen.h"
 
 static PSCREEN gVideo = (PSCREEN)(0x000B8000);
+static DWORD gCurrLine = 0;
 
 void CursorMove(int row, int col)
 {
@@ -46,7 +47,42 @@ void HelloBoot()
 		gVideo[i].color = 10;
 		gVideo[i].c = boot[i];
 	}
+
     CursorPosition(i);
+}
+
+void ScrollScreen()
+{
+    for (int i = CHARS_PER_LINE; i < MAX_OFFSET; i++)
+    {
+        gVideo[i - CHARS_PER_LINE] = gVideo[i];
+    }
+
+    gCurrLine--;
+}
+
+void PrintLine(char* text)
+{
+    int len = 0;
+
+    if (gCurrLine == MAX_LINES)
+    {
+        ScrollScreen();
+    }
+
+    while (text[len] != 0)
+    {
+        len++;
+    }
+    
+    int j = 0;
+    for (int i = CHARS_PER_LINE * gCurrLine; (j < len) && (i < MAX_OFFSET); i++, j++)
+    {
+        gVideo[i].color = 10;
+        gVideo[i].c = text[j];
+    }
+
+    gCurrLine++;
 }
 
 void ClearScreen()

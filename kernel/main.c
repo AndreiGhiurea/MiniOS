@@ -9,7 +9,21 @@ void KernelMain()
 
     ClearScreen();
 
-	HelloBoot();
+    __magic();
+
+    for (int i = 0; i < 30; i++)
+    {
+        PrintLine("HELLO");
+        __magic();
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        PrintLine("Salut");
+        __magic();
+    }
+
+    __magic();
 
     // TODO!!! PIC programming; see http://www.osdever.net/tutorials/view/programming-the-pic
     // TODO!!! define interrupt routines and dump trap frame
