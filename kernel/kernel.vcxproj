@@ -171,10 +171,12 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="interrupts.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="screen.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="interrupts.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="screen.h" />
   </ItemGroup>

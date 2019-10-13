@@ -27,8 +27,6 @@
 
 %define break xchg bx, bx
 
-IMPORTFROMC KernelMain
-
 TOP_OF_STACK                equ 0x200000
 KERNEL_BASE_PHYSICAL        equ 0x200000
 SEL_NULL                    equ 0*8
@@ -114,8 +112,6 @@ ASMEntryPoint:
 Realm64:
     ; We're now in 64 long mode
 
-    break
-
     mov     ax, SEL_DATA64
     mov ds, ax
     mov es, ax
@@ -123,9 +119,8 @@ Realm64:
     mov gs, ax
     mov ss, ax
 
-    call    KernelMain
+    call KernelMain
     
-    break
     CLI
     HLT
 
@@ -142,14 +137,128 @@ __sti:
 __magic:
     XCHG    BX,BX
     RET
+
+__interrupt:
+    int3
+    ret
     
+__halt:
+    hlt
+    ret
+
 __enableSSE:                ;; enable SSE instructions (CR4.OSFXSR = 1)  
     XOR     RAX, RAX
     MOV     RAX, CR4
     OR      RAX, 0x00000200
     MOV     CR4, RAX
     RET
+
+__load_idt:
+    break
+    lidt [rcx]
+    ret
     
-EXPORT2C ASMEntryPoint, __cli, __sti, __magic, __enableSSE
+irq0:
+    cli
+    call irq0_handler
+    sti
+    iretq
 
+irq1:
+    cli
+    call irq1_handler
+    sti
+    iretq
 
+irq2:
+    cli
+    call irq2_handler
+    sti
+    iretq
+
+irq3:
+    cli
+    call irq3_handler
+    sti
+    iretq
+
+irq4:
+    cli
+    call irq4_handler
+    sti
+    iretq
+
+irq5:
+    cli
+    call irq5_handler
+    sti
+    iretq
+
+irq6:
+    cli
+    call irq6_handler
+    sti
+    iretq
+
+irq7:
+    cli
+    call irq7_handler
+    sti
+    iretq
+    
+irq8:
+    cli
+    call irq8_handler
+    sti
+    iretq
+
+irq9:
+    cli
+    call irq9_handler
+    sti
+    iretq
+
+irq10:
+    cli
+    call irq10_handler
+    sti
+    iretq
+
+irq11:
+    cli
+    call irq11_handler
+    sti
+    iretq
+
+irq12:
+    cli
+    call irq12_handler
+    sti
+    iretq
+
+irq13:
+    cli
+    call irq13_handler
+    sti
+    iretq
+
+irq14:
+    cli
+    call irq14_handler
+    sti
+    iretq
+
+irq15:
+    cli
+    call irq15_handler
+    sti
+    iretq
+
+breakpoint:
+    cli
+    ; call breakpoint_handler <- This breaks the stack
+    sti
+    iretq
+
+IMPORTFROMC KernelMain, gIdt, irq0_handler, irq1_handler, irq2_handler, irq3_handler, irq4_handler, irq5_handler, irq6_handler, irq7_handler, irq8_handler, irq9_handler, irq10_handler, irq11_handler, irq12_handler, irq13_handler, irq14_handler, irq15_handler, breakpoint_handler
+EXPORT2C ASMEntryPoint, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, irq0, irq1, irq2, irq3, irq4, irq5, irq6, irq7, irq8, irq9, irq10, irq11, irq12, irq13, irq14, irq15, breakpoint

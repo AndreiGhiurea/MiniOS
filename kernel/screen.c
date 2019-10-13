@@ -80,6 +80,7 @@ void PrintLine(char* text)
     {
         gVideo[i].color = 10;
         gVideo[i].c = text[j];
+        CursorPosition(i);
     }
 
     gCurrLine++;

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "screen.h"
+#include "interrupts.h"
 
 void KernelMain()
 {
@@ -7,23 +8,20 @@ void KernelMain()
     
     __enableSSE();  // only for demo; in the future will be called from __init.asm
 
+    //InitPics(0x20, 0x28);
+
     ClearScreen();
 
-    __magic();
+    HelloBoot();
 
-    for (int i = 0; i < 30; i++)
+    InitIdt();
+
+    __sti();
+
+    for (int i = 0; i< 10;i++)
     {
-        PrintLine("HELLO");
-        __magic();
+        __halt();
     }
-
-    for (int i = 0; i < 10; i++)
-    {
-        PrintLine("Salut");
-        __magic();
-    }
-
-    __magic();
 
     // TODO!!! PIC programming; see http://www.osdever.net/tutorials/view/programming-the-pic
     // TODO!!! define interrupt routines and dump trap frame
