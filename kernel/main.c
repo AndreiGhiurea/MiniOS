@@ -4,17 +4,13 @@
 
 void KernelMain()
 {
-    //__magic();    // break into BOCHS
-    
     __enableSSE();  // only for demo; in the future will be called from __init.asm
-
-    //InitPics(0x20, 0x28);
 
     ClearScreen();
 
-    HelloBoot();
-
     InitIdt();
+
+    InitPit();
 
     __sti();
 

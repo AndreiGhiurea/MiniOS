@@ -25,6 +25,7 @@ typedef struct _IDT {
 #define ICW4 0x01
 
 void InitIdt();
+void InitPit();
 
 void irq0_handler(void);
 void irq1_handler(void);

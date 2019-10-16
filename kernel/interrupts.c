@@ -1,4 +1,5 @@
 #include "interrupts.h"
+#include "keyboard_map.h"
 #include "screen.h"
 
 IDT_ENTRY gIdtEntries[256];
@@ -8,7 +9,7 @@ IDT gIdt;
 ///*
 // * init the PICs and remap them
 // */
-static void InitPics(int pic1, int pic2)
+static void InitPics(BYTE pic1, BYTE pic2)
 {
     /* send ICW1 */
     __outbyte(PIC1, ICW1);
@@ -30,6 +31,15 @@ static void InitPics(int pic1, int pic2)
     __outbyte(PIC2 + 1, 0xFD);
 }
 
+// Sets the PIT to a fixed frequency to measue time in milliseconds
+void InitPit()
+{
+    __outbyte(0x43, 0x34);
+
+    __outbyte(0x40, 0xFF); // Set low byte of PIT reload value
+    __outbyte(0x40, 0xFF); // Set high byte of PIT reload value
+}
+
 void breakpoint_handler(void)
 {
     PrintLine("Breakpoint interrupt!");
@@ -37,15 +47,27 @@ void breakpoint_handler(void)
 
 void irq0_handler(void)
 {
+    PrintLine("PIT irq");
     __outbyte(0x20, 0x20); //EOI
 }
 
 void irq1_handler(void)
 {
-    BYTE key = 0x0;
+    BYTE scanCode = 0x0;
+    CHAR key = 0x0;
 
-    key = __inbyte(0x60);
-    PrintLine("Read from keyboard!");
+    scanCode = __inbyte(0x60);
+
+    // Check if a key was released and ignore for now
+    if (scanCode > 0x80)
+    {
+        goto leave;
+    }
+
+    key = GetCharFromScancode(scanCode);
+    WriteChar(key);
+
+leave:
     __outbyte(0x20, 0x20); //EOI
 }
 

@@ -27,6 +27,7 @@ void PutString(char* String, int Pos);
 void PutStringLine(char* String, int Line);
 void PrintLine(char* text);
 void ScrollScreen();
+void WriteChar(CHAR ch);
 
 
 #endif // _SCREEN_H_

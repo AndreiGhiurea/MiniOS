@@ -2,10 +2,11 @@
 
 static PSCREEN gVideo = (PSCREEN)(0x000B8000);
 static DWORD gCurrLine = 0;
+static DWORD gCurrCursorPos = 0;
 
 void CursorMove(int row, int col)
 {
-    unsigned short location = (row * MAX_COLUMNS) + col;       /* Short is a 16bit type , the formula is used here*/
+    DWORD location = (row * MAX_COLUMNS) + col;       /* Short is a 16bit type , the formula is used here*/
 
     //Cursor Low port
     __outbyte(0x3D4, 0x0F);                                    //Sending the cursor low byte to the VGA Controller
@@ -22,13 +23,24 @@ void CursorPosition(int pos)
 
     if (pos > MAX_OFFSET)
     {
-        pos = pos % MAX_OFFSET;
+        pos = (pos % MAX_OFFSET) + (MAX_LINES - 1 * CHARS_PER_LINE);
+        ScrollScreen();
     }
+
+    gCurrCursorPos = pos;
 
     row = pos / MAX_COLUMNS;
     col = pos % MAX_COLUMNS;
 
     CursorMove(row, col);
+}
+
+void WriteChar(CHAR ch)
+{
+    gVideo[gCurrCursorPos].color = 10;
+    gVideo[gCurrCursorPos].c = ch;
+
+    CursorPosition(gCurrCursorPos + 1);
 }
 
 void HelloBoot()
@@ -58,6 +70,11 @@ void ScrollScreen()
         gVideo[i - CHARS_PER_LINE] = gVideo[i];
     }
 
+    for (int i = CHARS_PER_LINE * (MAX_LINES - 1); i < MAX_OFFSET; i++)
+    {
+        gVideo[i].c = ' ';
+    }
+
     gCurrLine--;
 }
 
@@ -76,10 +93,18 @@ void PrintLine(char* text)
     }
     
     int j = 0;
-    for (int i = CHARS_PER_LINE * gCurrLine; (j < len) && (i < MAX_OFFSET); i++, j++)
+    for (int i = CHARS_PER_LINE * gCurrLine; (j < CHARS_PER_LINE) && (i < MAX_OFFSET); i++, j++)
     {
-        gVideo[i].color = 10;
-        gVideo[i].c = text[j];
+        if (j < len)
+        {
+            gVideo[i].color = 10;
+            gVideo[i].c = text[j];
+        }
+        else
+        {
+            gVideo[i].c = ' ';
+        }
+
         CursorPosition(i);
     }
 
