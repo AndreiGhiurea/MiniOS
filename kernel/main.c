@@ -14,6 +14,11 @@ void KernelMain()
 
     __sti();
 
+    for (int i = 0; i < MAX_OFFSET; i++)
+    {
+        WriteChar('a');
+    }
+
     for (int i = 0; i< 10;i++)
     {
         __halt();

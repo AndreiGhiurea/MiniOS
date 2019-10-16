@@ -21,9 +21,9 @@ void CursorPosition(int pos)
 {
     int row, col;
 
-    if (pos > MAX_OFFSET)
+    if (pos >= MAX_OFFSET)
     {
-        pos = (pos % MAX_OFFSET) + (MAX_LINES - 1 * CHARS_PER_LINE);
+        pos = (pos % MAX_OFFSET) + ((MAX_LINES - 1) * CHARS_PER_LINE);
         ScrollScreen();
     }
 
