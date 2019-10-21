@@ -171,16 +171,20 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="console.c" />
     <ClCompile Include="interrupts.c" />
     <ClCompile Include="kayboard_map.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="screen.c" />
+    <ClCompile Include="stdlib.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="console.h" />
     <ClInclude Include="interrupts.h" />
     <ClInclude Include="keyboard_map.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="screen.h" />
+    <ClInclude Include="stdlib.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="__init.asm">

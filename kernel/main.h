@@ -15,6 +15,14 @@ typedef signed __int8       INT8;
 typedef signed __int16      INT16;
 typedef signed __int32      INT32;
 typedef signed __int64      INT64;
+typedef void                VOID, *PVOID;
+typedef unsigned __int8     BOOL, *PBOOL;
+
+#define TRUE                ((BOOL)0x1)
+#define FALSE               ((BOOL)0x0)
+
+#define MIN(x,y)            (((x) < (y)) ? (x) : (y))
+#define MAX(x,y)            (((x) < (y)) ? (y) : (x))
 
 //
 // exported functions from __init.asm
@@ -26,5 +34,6 @@ void __enableSSE(void);
 void __load_idt(QWORD IdtAddress);
 void __halt(void);
 void __interrupt(void);
+void __dumpTrapFrame(void);
 
 #endif // _MAIN_H_

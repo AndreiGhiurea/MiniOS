@@ -8,30 +8,31 @@ void KernelMain()
 
     ClearScreen();
 
+    ScreenSetHeader("MiniOS", BLACK_COLOR, GREEN_COLOR);
+    ScreenSetClock(0, BLACK_COLOR, GREEN_COLOR);
+
     InitIdt();
 
-    InitPit();
-
+    InitPit(50); // Set PIT to 50hz
+    
     __sti();
 
-    for (int i = 0; i < MAX_OFFSET; i++)
-    {
-        WriteChar('a');
-    }
+    __interrupt();
 
-    for (int i = 0; i< 10;i++)
+    for (;;)
     {
         __halt();
     }
 
-    // TODO!!! PIC programming; see http://www.osdever.net/tutorials/view/programming-the-pic
-    // TODO!!! define interrupt routines and dump trap frame
+    // PIC programming; see http://www.osdever.net/tutorials/view/programming-the-pic
+
+    // Define interrupt routines and dump trap frame
     
-    // TODO!!! Timer programming
+    // Timer programming
 
-    // TODO!!! Keyboard programming
+    // Keyboard programming
 
-    // TODO!!! Implement a simple console
+    // Implement a simple console
 
     // TODO!!! read disk sectors using PIO mode ATA
 
