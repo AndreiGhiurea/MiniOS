@@ -35,5 +35,5 @@ void KernelMain()
 
     // TODO!!! read disk sectors using PIO mode ATA
 
-    // TODO!!! Memory management: virtual, physical and heap memory allocators
+    // TODO!!! Memory management: virtual, physical and heap memory allocatosr
 }

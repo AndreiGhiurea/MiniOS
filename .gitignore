@@ -58,3 +58,5 @@ dkms.conf
 *.db
 *.db
 kernel/x64
+kernel/kernel.VC.db
+bx_enh_dbg.ini

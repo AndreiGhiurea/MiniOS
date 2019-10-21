@@ -24,6 +24,9 @@
     <ClCompile Include="interrupts.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="kayboard_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="screen.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interrupts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

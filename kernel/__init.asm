@@ -159,105 +159,71 @@ __load_idt:
     ret
     
 irq0:
-    cli
     call irq0_handler
-    sti
     iretq
 
 irq1:
-    cli
     call irq1_handler
-    sti
     iretq
 
 irq2:
-    cli
     call irq2_handler
-    sti
     iretq
 
 irq3:
-    cli
     call irq3_handler
-    sti
     iretq
 
 irq4:
-    cli
     call irq4_handler
-    sti
     iretq
 
 irq5:
-    cli
     call irq5_handler
-    sti
     iretq
 
 irq6:
-    cli
     call irq6_handler
-    sti
     iretq
 
 irq7:
-    cli
     call irq7_handler
-    sti
     iretq
     
 irq8:
-    cli
     call irq8_handler
-    sti
     iretq
 
 irq9:
-    cli
     call irq9_handler
-    sti
     iretq
 
 irq10:
-    cli
     call irq10_handler
-    sti
     iretq
 
 irq11:
-    cli
     call irq11_handler
-    sti
     iretq
 
 irq12:
-    cli
     call irq12_handler
-    sti
     iretq
 
 irq13:
-    cli
     call irq13_handler
-    sti
     iretq
 
 irq14:
-    cli
     call irq14_handler
-    sti
     iretq
 
 irq15:
-    cli
     call irq15_handler
-    sti
     iretq
 
 breakpoint:
-    cli
     ; call breakpoint_handler <- This breaks the stack
-    sti
     iretq
 
 IMPORTFROMC KernelMain, gIdt, irq0_handler, irq1_handler, irq2_handler, irq3_handler, irq4_handler, irq5_handler, irq6_handler, irq7_handler, irq8_handler, irq9_handler, irq10_handler, irq11_handler, irq12_handler, irq13_handler, irq14_handler, irq15_handler, breakpoint_handler
