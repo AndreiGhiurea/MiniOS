@@ -1,12 +1,20 @@
 #include "screen.h"
+#include "stdlib.h"
+#include "console.h"
 
-static PSCREEN gVideo = (PSCREEN)(0x000B8000);
+static PSCREEN gVideo = (PSCREEN)(SCREEN_BASE_ADDRESS);
 static DWORD gCurrLine = 0;
-static DWORD gCurrCursorPos = 0;
+static DWORD gCurrColumn = 2;
+static DWORD gCurrCursorPos = CHARS_PER_LINE + 2;
+static CHAR gCommBuffer[1024];
+static DWORD gCommIndex = 0;
 
 void CursorMove(int row, int col)
 {
     DWORD location = (row * MAX_COLUMNS) + col;       /* Short is a 16bit type , the formula is used here*/
+    gCurrLine = row;
+    gCurrColumn = col;
+    gCurrCursorPos = CHARS_PER_LINE * row + col;
 
     //Cursor Low port
     __outbyte(0x3D4, 0x0F);                                    //Sending the cursor low byte to the VGA Controller
@@ -27,8 +35,6 @@ void CursorPosition(int pos)
         ScrollScreen();
     }
 
-    gCurrCursorPos = pos;
-
     row = pos / MAX_COLUMNS;
     col = pos % MAX_COLUMNS;
 
@@ -40,32 +46,44 @@ void WriteChar(CHAR ch)
     gVideo[gCurrCursorPos].color = 10;
     gVideo[gCurrCursorPos].c = ch;
 
+    gCommBuffer[gCommIndex] = ch;
+    gCommIndex++;
+
     CursorPosition(gCurrCursorPos + 1);
 }
 
-void HelloBoot()
+void ScreenNewCmdLine()
 {
-    int i, len;
-	char boot[] = "Hello Boot! Greetings from C...";
+    gCurrLine++;
+    gCurrColumn = 2;
 
-	len = 0;
-	while (boot[len] != 0)
-	{
-		len++;
-	}
+    if (gCurrLine == MAX_LINES)
+    {
+        ScrollScreen();
+    }
 
-	for (i = 0; (i < len) && (i < MAX_OFFSET); i++)
-	{
-		gVideo[i].color = 10;
-		gVideo[i].c = boot[i];
-	}
+    CursorPosition(gCurrLine * CHARS_PER_LINE + gCurrColumn);
+    gVideo[gCurrLine * CHARS_PER_LINE].color = 10;
+    gVideo[gCurrLine * CHARS_PER_LINE].c = '>';
+}
 
-    CursorPosition(i);
+void EnterPressed()
+{
+    gCommBuffer[gCommIndex] = '\0';
+
+    if (gCommIndex != 0)
+    {
+        HandleCommand(gCommBuffer);
+    }
+
+    gCommIndex = 0; // Rewrite the buffer
+
+    ScreenNewCmdLine();
 }
 
 void ScrollScreen()
 {
-    for (int i = CHARS_PER_LINE; i < MAX_OFFSET; i++)
+    for (int i = CHARS_PER_LINE * 2; i < MAX_OFFSET; i++)
     {
         gVideo[i - CHARS_PER_LINE] = gVideo[i];
     }
@@ -82,6 +100,8 @@ void PrintLine(char* text)
 {
     int len = 0;
 
+    gCurrLine++;
+
     if (gCurrLine == MAX_LINES)
     {
         ScrollScreen();
@@ -91,25 +111,27 @@ void PrintLine(char* text)
     {
         len++;
     }
-    
-    int j = 0;
-    for (int i = CHARS_PER_LINE * gCurrLine; (j < CHARS_PER_LINE) && (i < MAX_OFFSET); i++, j++)
+
+    int j = 0, i = 0;
+    for (i = CHARS_PER_LINE * gCurrLine; (j < len) && (i < MAX_OFFSET); i++, j++)
     {
-        if (j < len)
+        if (text[j] == '\n')
+        {
+            gCurrLine++;
+            gCurrColumn = 0;
+            CursorMove(gCurrLine, gCurrColumn);
+        }
+        else
         {
             gVideo[i].color = 10;
             gVideo[i].c = text[j];
         }
-        else
-        {
-            gVideo[i].c = ' ';
-        }
 
-        CursorPosition(i);
     }
 
-    gCurrLine++;
+    CursorPosition(i);
 }
+
 
 void ClearScreen()
 {
@@ -121,6 +143,69 @@ void ClearScreen()
         gVideo[i].c = ' ';
     }
 
-    CursorMove(0, 0);
+    ScreenNewCmdLine();
 }
 
+VOID
+ScreenSetHeader(
+    CHAR *Buffer,
+    BYTE ForegroundColor,
+    BYTE BackgroundColor
+    )
+{
+    BYTE color = (BackgroundColor << 4) | ForegroundColor;
+    DWORD size = strlen(Buffer);
+    DWORD remainingLeft = (CHARS_PER_LINE - size) / 2;
+    DWORD remainingRight = (CHARS_PER_LINE - size) / 2;
+
+    PSCREEN header = (PSCREEN)(SCREEN_BASE_ADDRESS);
+
+    for (DWORD i = 0; i < remainingLeft; i++)
+    {
+        header->c = ' ';
+        header->color = color;
+        header++;
+    }
+
+    for (DWORD i = 0; i < size; i++)
+    {
+        
+        header->c = Buffer[i];
+        header->color = color;
+        header++;
+    }
+
+    for (DWORD i = 0; i < remainingRight; i++)
+    {
+        header->c = ' ';
+        header->color = color;
+        header++;
+    }
+}
+
+VOID
+ScreenSetClock(
+    QWORD Seconds,
+    BYTE ForegroundColor,
+    BYTE BackgroundColor
+    )
+{
+    BYTE color = (BackgroundColor << 4) | ForegroundColor;
+    CHAR clock[64] = { 0 };
+    DWORD clockSize = 0;
+    PSCREEN header = (PSCREEN)(SCREEN_BASE_ADDRESS) + CHARS_PER_LINE - 1;
+
+    itoa(Seconds, clock, 10, TRUE);
+    clockSize = strlen(clock);
+
+    header->c = 's';
+    header->color = color;
+    header--;
+
+    for (DWORD i = 0; i < clockSize; i++)
+    {
+        header->c = clock[i];
+        header->color = color;
+        header--;
+    }
+}

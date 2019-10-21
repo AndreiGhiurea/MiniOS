@@ -48,3 +48,4 @@ com2: enabled=0
 com3: enabled=0
 com4: enabled=0
 magic_break: enabled=1
+clock: sync=realtime
