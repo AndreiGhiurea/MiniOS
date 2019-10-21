@@ -18,6 +18,32 @@ typedef struct _IDT {
 } IDT, *PIDT;
 #pragma pack(pop)
 
+typedef struct _TRAP_FRAME {
+    QWORD Rax;
+    QWORD Rbx;
+    QWORD Rcx;
+    QWORD Rdx;
+    QWORD Rsi;
+    QWORD Rdi;
+    QWORD Rbp;
+    QWORD Rsp;
+    QWORD R8;
+    QWORD R9;
+    QWORD R10;
+    QWORD R11;
+    QWORD R12;
+    QWORD R13;
+    QWORD R14;
+    QWORD R15;
+    QWORD Rip;
+    QWORD Flags;
+    QWORD Fs;
+    QWORD Gs;
+    QWORD Cr0;
+    QWORD Cr3;
+    QWORD Cr4;
+} TRAP_FRAME, *PTRAP_FRAME;
+
 #define PIC1 0x20
 #define PIC2 0xA0
 
@@ -25,41 +51,41 @@ typedef struct _IDT {
 #define ICW4 0x01
 
 void InitIdt();
-void InitPit();
+void InitPit(DWORD frequency);
 
-void irq0_handler(void);
-void irq1_handler(void);
-void irq2_handler(void);
-void irq3_handler(void);
-void irq4_handler(void);
-void irq5_handler(void);
-void irq6_handler(void);
-void irq7_handler(void);
-void irq8_handler(void);
-void irq9_handler(void);
-void irq10_handler(void);
-void irq11_handler(void);
-void irq12_handler(void);
-void irq13_handler(void);
-void irq14_handler(void);
-void irq15_handler(void);
-void breakpoint_handler(void);
+void Irq0Handler(void);
+void Irq1Handler(void);
+void Irq2Handler(void);
+void Irq3Handler(void);
+void Irq4Handler(void);
+void Irq5Handler(void);
+void Irq6Handler(void);
+void Irq7Handler(void);
+void Irq8Handler(void);
+void Irq9Handler(void);
+void Irq10Handler(void);
+void Irq11Handler(void);
+void Irq12Handler(void);
+void Irq13Handler(void);
+void Irq14Handler(void);
+void Irq15Handler(void);
+void BreakpointHandler(void);
 
 // imported from __init.asm
-int breakpoint(void);
-int irq0(void);
-int irq1(void);
-int irq2(void);
-int irq3(void);
-int irq4(void);
-int irq5(void);
-int irq6(void);
-int irq7(void);
-int irq8(void);
-int irq9(void);
-int irq10(void);
-int irq11(void);
-int irq12(void);
-int irq13(void);
-int irq14(void);
-int irq15(void);
+int __int3(void);
+int __irq0(void);
+int __irq1(void);
+int __irq2(void);
+int __irq3(void);
+int __irq4(void);
+int __irq5(void);
+int __irq6(void);
+int __irq7(void);
+int __irq8(void);
+int __irq9(void);
+int __irq10(void);
+int __irq11(void);
+int __irq12(void);
+int __irq13(void);
+int __irq14(void);
+int __irq15(void);

@@ -16,7 +16,7 @@
 %macro EXPORT2C 1-*
 %rep  %0
     %ifidn __OUTPUT_FORMAT__, win32 ; win32 builds from Visual C decorate C names using _ 
-    global _%1
+    global _%1W
     _%1 equ %1
     %else
     global %1
@@ -154,77 +154,112 @@ __enableSSE:                ;; enable SSE instructions (CR4.OSFXSR = 1)
     RET
 
 __load_idt:
-    break
     lidt [rcx]
     ret
     
-irq0:
-    call irq0_handler
+__irq0:
+    call Irq0Handler
     iretq
 
-irq1:
-    call irq1_handler
+__irq1:
+    call Irq1Handler
     iretq
 
-irq2:
-    call irq2_handler
+__irq2:
+    call Irq2Handler
     iretq
 
-irq3:
-    call irq3_handler
+__irq3:
+    call Irq3Handler
     iretq
 
-irq4:
-    call irq4_handler
+__irq4:
+    call Irq4Handler
     iretq
 
-irq5:
-    call irq5_handler
+__irq5:
+    call Irq5Handler
     iretq
 
-irq6:
-    call irq6_handler
+__irq6:
+    call Irq6Handler
     iretq
 
-irq7:
-    call irq7_handler
+__irq7:
+    call Irq7Handler
     iretq
     
-irq8:
-    call irq8_handler
+__irq8:
+    call Irq8Handler
     iretq
 
-irq9:
-    call irq9_handler
+__irq9:
+    call Irq9Handler
     iretq
 
-irq10:
-    call irq10_handler
+__irq10:
+    call Irq10Handler
     iretq
 
-irq11:
-    call irq11_handler
+__irq11:
+    call Irq11Handler
     iretq
 
-irq12:
-    call irq12_handler
+__irq12:
+    call Irq12Handler
     iretq
 
-irq13:
-    call irq13_handler
+__irq13:
+    call Irq13Handler
     iretq
 
-irq14:
-    call irq14_handler
+__irq14:
+    call Irq14Handler
     iretq
 
-irq15:
-    call irq15_handler
+__irq15:
+    call Irq15Handler
     iretq
 
-breakpoint:
-    ; call breakpoint_handler <- This breaks the stack
+__int3:
+    call BreakpointHandler
     iretq
 
-IMPORTFROMC KernelMain, gIdt, irq0_handler, irq1_handler, irq2_handler, irq3_handler, irq4_handler, irq5_handler, irq6_handler, irq7_handler, irq8_handler, irq9_handler, irq10_handler, irq11_handler, irq12_handler, irq13_handler, irq14_handler, irq15_handler, breakpoint_handler
-EXPORT2C ASMEntryPoint, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, irq0, irq1, irq2, irq3, irq4, irq5, irq6, irq7, irq8, irq9, irq10, irq11, irq12, irq13, irq14, irq15, breakpoint
+__dumpTrapFrame:
+    push rax
+    mov rax, cr4
+    push rax
+    mov rax, cr3
+    push rax
+    mov rax, cr0
+    push rax
+    push gs
+    push fs
+    pushf
+    push QWORD __dumpTrapFrame
+    push r15
+    push r14
+    push r13
+    push r12
+    push r11
+    push r10
+    push r9
+    push r8
+    push rsp
+    push rbp
+    push rdi
+    push rsi
+    push rdx
+    push rcx
+    push rbx
+    mov rax, [rsp + 8 * 22]
+    push rax
+    mov rcx, rsp
+    sub rsp, 20h
+    call DumpTrapFrame
+    add rsp, 20h
+    add rsp, 8 * 24
+    ret
+
+IMPORTFROMC KernelMain, DumpTrapFrame, gIdt, Irq0Handler, Irq1Handler, Irq2Handler, Irq3Handler, Irq4Handler, Irq5Handler, Irq6Handler, Irq7Handler, Irq8Handler, Irq9Handler, Irq10Handler, Irq11Handler, Irq12Handler, Irq13Handler, Irq14Handler, Irq15Handler, BreakpointHandler, DumpTrapFrame
+EXPORT2C ASMEntryPoint, __dumpTrapFrame, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, __irq0, __irq1, __irq2, __irq3, __irq4, __irq5, __irq6, __irq7, __irq8, __irq9, __irq10, __irq11, __irq12, __irq13, __irq14, __irq15, __int3
