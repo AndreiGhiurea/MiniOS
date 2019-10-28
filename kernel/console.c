@@ -8,6 +8,10 @@ VOID HandleCommand(CHAR* Buffer)
     {
         HandleRead();
     }
+    else if (0 == strcmp(Buffer, "dump"))
+    {
+        __dumpTrapFrame();
+    }
     else
     {
         PrintLine("[ERROR] Invalid Command");
