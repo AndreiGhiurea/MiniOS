@@ -69,14 +69,14 @@ DWORD _strcmp(CHAR* Buf, CHAR* Src)
 
     if (lenBuf != lenSrc)
     {
-        return len;
+        return 1;
     }
     
     for (DWORD i = 0; i < len; i++)
     {
         if (Buf[i] != Src[i])
         {
-            return i;
+            return 1;
         }
     }
 
