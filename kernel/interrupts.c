@@ -8,6 +8,7 @@ IDT gIdt;
 
 QWORD gSeconds;
 BYTE gSecondFractions;
+extern WORD gReadSector[256];
 
 // *
 // * init the PICs and remap them
@@ -30,8 +31,8 @@ static void InitPics(BYTE pic1, BYTE pic2)
     __outbyte(PIC1 + 1, ICW4);
     __outbyte(PIC2 + 1, ICW4);
 
-    __outbyte(PIC1 + 1, 0xFC);
-    __outbyte(PIC2 + 1, 0xFC);
+    __outbyte(PIC1 + 1, 0x00);
+    __outbyte(PIC2 + 1, 0x00);
 }
 
 // Init PIT timer
@@ -108,8 +109,6 @@ void DumpTrapFrame(TRAP_FRAME* TrapFrame)
     strcat(text, reg, 64);
     PrintLine(text);
     memset((BYTE*)text, '\0', 64);
-
-    ScreenNewCmdLine();
 }
 
 void BreakpointHandler(void)
@@ -227,6 +226,12 @@ void Irq13Handler(void)
 
 void Irq14Handler(void)
 {
+    // Transfer 256 16 - bit values, a uint16_t at a time, into your buffer from I / O port 0x1F0. (In assembler, REP INSW works well for this.)
+    for (DWORD i = 0; i < 256; i++)
+    {
+        gReadSector[i] = (WORD)__inword(0x1F0);
+    }
+
     __outbyte(0xA0, 0x20);
     __outbyte(0x20, 0x20); //EOI   
 }

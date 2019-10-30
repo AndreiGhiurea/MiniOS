@@ -17,7 +17,7 @@ void KernelMain()
     
     __sti();
 
-    __interrupt();
+    // __interrupt();
 
     for (;;)
     {

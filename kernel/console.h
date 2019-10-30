@@ -3,3 +3,4 @@
 
 VOID HandleCommand(CHAR* Buffer);
 VOID HandleRead();
+VOID HandleDump();
