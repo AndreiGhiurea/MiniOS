@@ -9,11 +9,22 @@ IDT gIdt;
 QWORD gSeconds;
 BYTE gSecondFractions;
 extern WORD gReadSector[256];
+extern CPU_STATE gCpuState;
+
+static void SignalEoi(BOOL Slave)
+{
+    if (Slave)
+    {
+         __outbyte(0xA0, 0x20);
+    }
+
+    __outbyte(0x20, 0x20); //EOI
+}
 
 // *
 // * init the PICs and remap them
 // *
-static void InitPics(BYTE pic1, BYTE pic2)
+void InitPics(BYTE pic1, BYTE pic2, BYTE mask1, BYTE mask2)
 {
     /* send ICW1 */
     __outbyte(PIC1, ICW1);
@@ -31,8 +42,8 @@ static void InitPics(BYTE pic1, BYTE pic2)
     __outbyte(PIC1 + 1, ICW4);
     __outbyte(PIC2 + 1, ICW4);
 
-    __outbyte(PIC1 + 1, 0x00);
-    __outbyte(PIC2 + 1, 0x00);
+    __outbyte(PIC1 + 1, mask1);
+    __outbyte(PIC2 + 1, mask2);
 }
 
 // Init PIT timer
@@ -125,10 +136,10 @@ void Irq0Handler(void)
     {
         gSecondFractions = 0;
         gSeconds++;
-        ScreenSetClock(gSeconds, BLACK_COLOR, GREEN_COLOR);
+        ScreenSetClock(gSeconds, BLACK_COLOR, CURRENT_COLOR);
     }
 
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq1Handler(void)
@@ -155,73 +166,67 @@ void Irq1Handler(void)
     WriteChar(key);
 
 leave:
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq2Handler(void)
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq3Handler(void)
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq4Handler(void)
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq5Handler(void)
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq6Handler(void)
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq7Handler(void) 
 {
-    __outbyte(0x20, 0x20); //EOI
+    SignalEoi(FALSE);
 }
 
 void Irq8Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq9Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq10Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq11Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq12Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq13Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq14Handler(void)
@@ -232,14 +237,12 @@ void Irq14Handler(void)
         gReadSector[i] = (WORD)__inword(0x1F0);
     }
 
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 void Irq15Handler(void)
 {
-    __outbyte(0xA0, 0x20);
-    __outbyte(0x20, 0x20); //EOI   
+    SignalEoi(TRUE);
 }
 
 static void SetupIdtEntry(DWORD Index, QWORD Address)
@@ -255,8 +258,6 @@ static void SetupIdtEntry(DWORD Index, QWORD Address)
 
 void InitIdt()
 {
-    InitPics(0x20, 0x28);
-
     SetupIdtEntry(3, (QWORD)__int3);
     SetupIdtEntry(32, (QWORD)__irq0);
     SetupIdtEntry(33, (QWORD)__irq1);

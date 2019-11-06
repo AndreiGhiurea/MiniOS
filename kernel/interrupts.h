@@ -50,6 +50,7 @@ typedef struct _TRAP_FRAME {
 #define ICW1 0x11
 #define ICW4 0x01
 
+void InitPics(BYTE pic1, BYTE pic2, BYTE mask1, BYTE mask2);
 void InitIdt();
 void InitPit(DWORD frequency);
 

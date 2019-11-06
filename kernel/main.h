@@ -24,6 +24,10 @@ typedef unsigned __int8     BOOL, *PBOOL;
 #define MIN(x,y)            (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)            (((x) < (y)) ? (y) : (x))
 
+typedef struct _CPU_STATE {
+    BOOL ApicSupported;
+} CPU_STATE, *PCPU_STATE;
+
 //
 // exported functions from __init.asm
 //
