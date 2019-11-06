@@ -43,7 +43,7 @@ void CursorPosition(int pos)
 
 void WriteChar(CHAR ch)
 {
-    gVideo[gCurrCursorPos].color = 10;
+    gVideo[gCurrCursorPos].color = CURRENT_COLOR;
     gVideo[gCurrCursorPos].c = ch;
 
     gCommBuffer[gCommIndex] = ch;
@@ -63,7 +63,7 @@ void ScreenNewCmdLine()
     }
 
     CursorPosition(gCurrLine * CHARS_PER_LINE + gCurrColumn);
-    gVideo[gCurrLine * CHARS_PER_LINE].color = 10;
+    gVideo[gCurrLine * CHARS_PER_LINE].color = CURRENT_COLOR;
     gVideo[gCurrLine * CHARS_PER_LINE].c = '>';
 }
 
@@ -123,7 +123,7 @@ void PrintLine(char* text)
         }
         else
         {
-            gVideo[i].color = 10;
+            gVideo[i].color = CURRENT_COLOR;
             gVideo[i].c = text[j];
         }
 
@@ -139,7 +139,7 @@ void ClearScreen()
 
     for (i = 0; i < MAX_OFFSET; i++)
     {
-        gVideo[i].color = 10;
+        gVideo[i].color = CURRENT_COLOR;
         gVideo[i].c = ' ';
     }
 

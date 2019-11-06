@@ -12,10 +12,12 @@
 #define BLACK_COLOR                 0x0
 #define RED_COLOR                   0x4
 #define GREY_COLOR                  0x7
-#define BLUE_COLOR                  0x1
 #define GREEN_COLOR                 0x2
+#define BLUE_COLOR                  0x1
 #define CYAN_COLOR                  0x3
 #define PURPLE_COLOR                0x5
+
+#define CURRENT_COLOR               GREY_COLOR
 
 #pragma pack(push)
 #pragma pack(1)
