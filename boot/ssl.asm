@@ -42,9 +42,7 @@ SSL:
     
     mov    [ds:0xb8000], BYTE 'O'
     mov    [ds:0xb8002], BYTE 'K'
-    
-    ;break
-    
+
 is_A20_on?:   
     pushad
     mov edi,0x112345  ;odd megabyte address.
@@ -55,12 +53,15 @@ is_A20_on?:
     popad
     jne A20_on        ;if not equivalent , A20 line is set.
 
+    in al, 0x92
+    or al, 2
+    out 0x92, al        ;enable a20 line
+    jmp A20_on
+
     cli               ;if equivalent , the A20 line is cleared.
     hlt
  
 A20_on:
-    
-    ;break
     
     mov    eax, 0x201000    ; the hardcoded ASMEntryPoint of the Kernel
     call   eax
