@@ -18,6 +18,10 @@ VOID HandleCommand(CHAR* Buffer)
     {
         HandleDump();
     }
+    else if (0 == strcmp(Buffer, "shutdown"))
+    {
+        __outword(0xB004, 0x2000);
+    }
     else
     {
         PrintLine("[ERROR] Invalid Command");
