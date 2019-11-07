@@ -62,29 +62,24 @@ ASMEntryPoint:
     rep stosd
 
     mov edi, 0x00206000                         ;; PDPT
-    mov [edi], DWORD 0x00207007                 ;; 0-1GB
+    mov [edi], DWORD 0x00000087                 ;; 0-1GB identity mapped
+    mov [edi + 4], DWORD 0x00000000
+    add edi, 8
+
+    mov [edi], DWORD 0x40000087                 ;; 1-2GB identity mapped
+    mov [edi + 4], DWORD 0x0
+    add edi, 8
+     
+    mov [edi], DWORD 0x80000087                 ;; 2-3GB identity mapped
+    mov [edi + 4], DWORD 0x00000000
+    add edi, 8
+    
+    mov [edi], DWORD 0xC0000087                 ;; 3-4GB identity mapped
     mov [edi + 4], DWORD 0x00000000
     add edi, 8
 
     xor eax, eax                                ;; Fil the remaining entries with 0x0
-    mov ecx, 1022
-    rep stosd
-
-    mov edi, 0x00207000                         ;; PDT - with bit 7 set, pages are now 2MB
-    mov [edi], DWORD 0x00000087                 ;; 0-2MB identity mapped
-    mov [edi + 4], DWORD 0x00000000
-    add edi, 8
-
-    mov [edi], DWORD 0x00200087                 ;; 2-4MB identity mapped
-    mov [edi + 4], DWORD 0x0
-    add edi, 8
-     
-    mov [edi], DWORD 0x00400087                 ;; 4-6MB identity mapped
-    mov [edi + 4], DWORD 0x00000000
-    add edi, 8
-
-    xor eax, eax                                ;; Fill the rest of entries with 0x0
-    mov ecx, 1018
+    mov ecx, 1016
     rep stosd
 
     mov eax, cr4

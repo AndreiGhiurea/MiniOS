@@ -13,12 +13,19 @@ extern CPU_STATE gCpuState;
 
 static void SignalEoi(BOOL Slave)
 {
-    if (Slave)
+    if (!gCpuState.x2ApicSupported)
     {
-         __outbyte(0xA0, 0x20);
-    }
+        if (Slave)
+        {
+            __outbyte(0xA0, 0x20);
+        }
 
-    __outbyte(0x20, 0x20); //EOI
+        __outbyte(0x20, 0x20); //EOI
+    }
+    else
+    {
+        __writemsr(APIC_EOI_REG, 0x0);
+    }
 }
 
 // *

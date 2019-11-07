@@ -1,11 +1,14 @@
 #include "main.h"
 #include "screen.h"
 #include "interrupts.h"
+#include "stdlib.h"
 
 CPU_STATE gCpuState;
 
 void KernelMain()
 {
+    unsigned long long msrVal;
+
     __enableSSE();  // only for demo; in the future will be called from __init.asm
 
     ClearScreen();
@@ -15,16 +18,24 @@ void KernelMain()
 
     int cpuInfo[4];
     __cpuid(cpuInfo, 0x01);
-    if (cpuInfo[3] & (1 << 9))
+    if (cpuInfo[3] & (1 << 9) &&
+        cpuInfo[2] & (1 << 21))
     {
-        gCpuState.ApicSupported = TRUE;
+        gCpuState.x2ApicSupported = TRUE;
+        msrVal = __readmsr(IA32_APIC_BASE_MSR);
+        __writemsr(IA32_APIC_BASE_MSR, msrVal & (1 << 10)); // x2APIC mode enabled
     }
     else
     {
-        gCpuState.ApicSupported = FALSE;
+        gCpuState.x2ApicSupported = FALSE;
     }
 
-    if (gCpuState.ApicSupported)
+    msrVal = __readmsr(IA32_APIC_BASE_MSR);
+    CHAR text[64] = { 0 };
+    itoa(msrVal, text, 16, FALSE);
+    PrintLine(text);
+
+    if (gCpuState.x2ApicSupported)
     {
         // Remap PIC and mask all interrupt to disable them
         InitPics(0x20, 0x28, 0xFF, 0xFF);
