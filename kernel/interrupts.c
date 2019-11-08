@@ -1,6 +1,7 @@
 #include "interrupts.h"
 #include "keyboard_map.h"
 #include "stdlib.h"
+#include "apic.h"
 #include "screen.h"
 
 IDT_ENTRY gIdtEntries[256];
@@ -135,6 +136,11 @@ void BreakpointHandler(void)
     __dumpTrapFrame();
  }
 
+void PageFaultHandler(void)
+{
+    PrintLine("PageFault");
+}
+
 void Irq0Handler(void)
 {
     gSecondFractions++;
@@ -178,6 +184,7 @@ leave:
 
 void Irq2Handler(void)
 {
+    PrintLine("222");
     SignalEoi(FALSE);
 }
 
@@ -266,6 +273,7 @@ static void SetupIdtEntry(DWORD Index, QWORD Address)
 void InitIdt()
 {
     SetupIdtEntry(3, (QWORD)__int3);
+    SetupIdtEntry(14, (QWORD)__int14);
     SetupIdtEntry(32, (QWORD)__irq0);
     SetupIdtEntry(33, (QWORD)__irq1);
     SetupIdtEntry(34, (QWORD)__irq2);

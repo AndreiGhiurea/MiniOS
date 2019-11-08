@@ -80,6 +80,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)postbuild.cmd" "$(SolutionDir)" "$(TargetPath)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -87,6 +90,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)postbuild.cmd" "$(SolutionDir)" "$(TargetPath)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -171,18 +177,22 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="apic.c" />
     <ClCompile Include="console.c" />
     <ClCompile Include="interrupts.c" />
-    <ClCompile Include="kayboard_map.c" />
+    <ClCompile Include="keyboard_map.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="mp.c" />
     <ClCompile Include="screen.c" />
     <ClCompile Include="stdlib.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="apic.h" />
     <ClInclude Include="console.h" />
     <ClInclude Include="interrupts.h" />
     <ClInclude Include="keyboard_map.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="mp.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="stdlib.h" />
   </ItemGroup>

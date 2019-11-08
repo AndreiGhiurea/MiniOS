@@ -24,13 +24,19 @@
     <ClCompile Include="interrupts.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="kayboard_map.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdlib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="apic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="apic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

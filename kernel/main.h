@@ -2,7 +2,6 @@
 #define _MAIN_H_
 
 #include <intrin.h>
-
 //
 // default types
 //
@@ -24,12 +23,12 @@ typedef unsigned __int8     BOOL, *PBOOL;
 #define MIN(x,y)            (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)            (((x) < (y)) ? (y) : (x))
 
-#define IA32_APIC_BASE_MSR  0x1B
-#define APIC_BASE_MASK      0xFFFFFF000
-#define APIC_EOI_REG        0x80B
-
 typedef struct _CPU_STATE {
     BOOL x2ApicSupported;
+    QWORD IoApics[16];
+    DWORD NrOfIoApics;
+    QWORD Lapics[16];
+    DWORD NrOfLapics;
 } CPU_STATE, *PCPU_STATE;
 
 //

@@ -71,9 +71,11 @@ void Irq13Handler(void);
 void Irq14Handler(void);
 void Irq15Handler(void);
 void BreakpointHandler(void);
+void PageFaultHandler(void);
 
 // imported from __init.asm
 int __int3(void);
+int __int14(void);
 int __irq0(void);
 int __irq1(void);
 int __irq2(void);
