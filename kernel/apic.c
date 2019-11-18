@@ -60,6 +60,9 @@ VOID EnableX2Apic()
             gCpuState.x2ApicSupported = FALSE;
             return;
         }
+
+        gCpuState.LapicBase = (msrVal & APIC_BASE_MASK) >> 12;
+
         __writemsr(IA32_APIC_BASE_MSR, msrVal | (1 << 10)); // x2APIC mode enabled
 
         // Write the Spurious Interrupt Vector Register (SVR) with the good value

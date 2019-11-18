@@ -6,6 +6,7 @@
 #include "apic.h"
 
 CPU_STATE gCpuState;
+DWORD gActiveCpuCount;
 
 void KernelMain()
 {
@@ -35,6 +36,29 @@ void KernelMain()
 
     InitPit(50); // Set PIT to 50hz
     
+    __writemsr(APIC_ICR_MSR, ICR_VALUE_SIPI); // Send a SIPI to all APs
+
+    switch (gActiveCpuCount)
+    {
+    case 0:
+        PrintLine("0");
+        break;
+    case 1:
+        PrintLine("1");
+        break;
+    case 2:
+        PrintLine("2");
+        break;
+    case 3:
+        PrintLine("3");
+        break;
+    case 4:
+        PrintLine("4");
+        break;
+    default:
+        break;
+    }
+
     __sti();
 
     // __interrupt();
