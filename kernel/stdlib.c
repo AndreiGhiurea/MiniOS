@@ -1,5 +1,8 @@
 #include "stdlib.h"
 
+BOOL gSleeping = FALSE;
+QWORD gSleepingMs = 0;
+
 DWORD _strlen(CHAR *_Str)
 {
     DWORD len = 0;
@@ -102,4 +105,15 @@ VOID _memset(BYTE* Dest, BYTE Val, DWORD Size)
     {
         Dest[i] = Val;
     }
+}
+
+VOID Sleep(DWORD Miliseconds)
+{
+    gSleepingMs = 0;
+    gSleeping = TRUE;
+    while (gSleepingMs < Miliseconds)
+    {
+        ;
+    }
+    gSleeping = FALSE;
 }

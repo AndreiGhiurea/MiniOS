@@ -35,8 +35,18 @@ void KernelMain()
     InitIdt();
 
     InitPit(50); // Set PIT to 50hz
-    
-    __writemsr(APIC_ICR_MSR, ICR_VALUE_SIPI); // Send a SIPI to all APs
+
+    __sti();
+
+    //__writemsr(APIC_ICR_MSR, 0x00000000000C4500); // Broadcast IPI
+    // Sleep(10);
+    //__writemsr(APIC_ICR_MSR, 0x00000000000C4609); // Broadcast SIPI
+    // Sleep(200);
+    //__writemsr(APIC_ICR_MSR, 0x00000000000C4609); // Broadcast 2nd SIPI
+
+    // Sleep(200);
+
+    // __writemsr(APIC_ICR_MSR, ICR_VALUE_SIPI); // Send a SIPI to all APs
 
     switch (gActiveCpuCount)
     {
@@ -56,10 +66,8 @@ void KernelMain()
         PrintLine("4");
         break;
     default:
-        break;
+        PrintLine("Hmmm");
     }
-
-    __sti();
 
     // __interrupt();
 

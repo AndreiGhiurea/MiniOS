@@ -11,6 +11,8 @@ QWORD gSeconds;
 BYTE gSecondFractions;
 extern WORD gReadSector[256];
 extern CPU_STATE gCpuState;
+extern BOOL gSleeping;
+extern QWORD gSleepingMs;
 
 static void SignalEoi(BOOL Slave)
 {
@@ -144,6 +146,11 @@ void PageFaultHandler(void)
 void Irq0Handler(void)
 {
     gSecondFractions++;
+
+    if (gSleeping)
+    {
+        gSleepingMs += 20;
+    }
 
     if (gSecondFractions == 50)
     {
