@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="console.c" />
+    <ClCompile Include="heap.c" />
     <ClCompile Include="interrupts.c" />
     <ClCompile Include="kayboard_map.c" />
     <ClCompile Include="main.c" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h" />
+    <ClInclude Include="heap.h" />
     <ClInclude Include="interrupts.h" />
     <ClInclude Include="keyboard_map.h" />
     <ClInclude Include="main.h" />

@@ -2,7 +2,6 @@
 #define _MAIN_H_
 
 #include <intrin.h>
-
 //
 // default types
 //
@@ -23,6 +22,17 @@ typedef unsigned __int8     BOOL, *PBOOL;
 
 #define MIN(x,y)            (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)            (((x) < (y)) ? (y) : (x))
+
+#define PAGE_SIZE           0x1000
+
+typedef struct _CPU_STATE {
+    BOOL x2ApicSupported;
+    QWORD LapicBase;
+    QWORD IoApics[16];
+    DWORD NrOfIoApics;
+    QWORD Lapics[16];
+    DWORD NrOfLapics;
+} CPU_STATE, *PCPU_STATE;
 
 //
 // exported functions from __init.asm
