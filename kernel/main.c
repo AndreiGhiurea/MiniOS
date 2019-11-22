@@ -4,6 +4,7 @@
 #include "stdlib.h"
 #include "mp.h"
 #include "apic.h"
+#include "heap.h"
 
 CPU_STATE gCpuState;
 DWORD gActiveCpuCount;
@@ -35,6 +36,8 @@ void KernelMain()
     InitIdt();
 
     InitPit(50); // Set PIT to 50hz
+    
+    InitHeap();
 
     __sti();
 

@@ -179,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="apic.c" />
     <ClCompile Include="console.c" />
+    <ClCompile Include="heap.c" />
     <ClCompile Include="interrupts.c" />
     <ClCompile Include="keyboard_map.c" />
     <ClCompile Include="main.c" />
@@ -189,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="apic.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="heap.h" />
     <ClInclude Include="interrupts.h" />
     <ClInclude Include="keyboard_map.h" />
     <ClInclude Include="main.h" />

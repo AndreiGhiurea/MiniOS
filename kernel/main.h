@@ -23,6 +23,8 @@ typedef unsigned __int8     BOOL, *PBOOL;
 #define MIN(x,y)            (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)            (((x) < (y)) ? (y) : (x))
 
+#define PAGE_SIZE           0x1000
+
 typedef struct _CPU_STATE {
     BOOL x2ApicSupported;
     QWORD LapicBase;
