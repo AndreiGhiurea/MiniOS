@@ -278,10 +278,10 @@ static void SetupIdtEntry(DWORD Index, QWORD Address)
 
 void InitIdt()
 {
-    // for (DWORD i = 0; i <= 16; i++)
-    // {
-    //     SetupIdtEntry(i, (QWORD)__genericInt);
-    // }
+    for (DWORD i = 0; i <= 16; i++)
+    {
+        SetupIdtEntry(i, (QWORD)__genericInt);
+    }
     
     SetupIdtEntry(32, (QWORD)__irq0);
     SetupIdtEntry(33, (QWORD)__irq1);
