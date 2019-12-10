@@ -1,7 +1,6 @@
 #include "interrupts.h"
 #include "keyboard_map.h"
 #include "stdlib.h"
-#include "apic.h"
 #include "screen.h"
 
 IDT_ENTRY gIdtEntries[256];
@@ -16,19 +15,12 @@ extern QWORD gSleepingMs;
 
 static void SignalEoi(BOOL Slave)
 {
-    if (!gCpuState.x2ApicSupported)
+    if (Slave)
     {
-        if (Slave)
-        {
-            __outbyte(0xA0, 0x20);
-        }
+        __outbyte(0xA0, 0x20);
+    }
 
-        __outbyte(0x20, 0x20); //EOI
-    }
-    else
-    {
-        __writemsr(APIC_EOI_REG, 0x0);
-    }
+    __outbyte(0x20, 0x20); //EOI
 }
 
 // *

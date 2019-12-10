@@ -1,4 +1,6 @@
 #include "heap.h"
+#include "screen.h"
+#include "stdlib.h"
 
 VOID* gHeapPages[HEAP_NR_OF_PAGES];
 
@@ -26,6 +28,7 @@ VOID* _malloc(DWORD Size)
 
     if (NrOfPages > HEAP_NR_OF_PAGES)
     {
+        PrintLine("NrOfPages > HEAP_NR_OF_PAGES");
         return NULL;
     }
 
@@ -35,7 +38,7 @@ VOID* _malloc(DWORD Size)
 
         for (DWORD j = 0; j < NrOfPages; j++)
         {
-            pageInfo = (QWORD)(gHeapPages[i + j]) & 0xFFFF;
+            pageInfo = (QWORD)(gHeapPages[i + j]) & 0xFFF;
             if (pageInfo)
             {
                 found = FALSE;
@@ -45,10 +48,10 @@ VOID* _malloc(DWORD Size)
         if (found)
         {
             allocAddress = gHeapPages[i];
-            gHeapPages[i] = (VOID*)((QWORD)(gHeapPages[i]) | (NrOfPages & 0xFFFF));
+            gHeapPages[i] = (VOID*)((QWORD)(gHeapPages[i]) | (NrOfPages & 0xFFF));
             for (DWORD j = 1; j < NrOfPages; j++)
             {
-                gHeapPages[i + j] = (VOID*)((QWORD)(gHeapPages[i + j]) | 0xFFFF);
+                gHeapPages[i + j] = (VOID*)((QWORD)(gHeapPages[i + j]) | 0xFFF);
             }
 
             return allocAddress;
@@ -75,16 +78,16 @@ VOID _free(VOID* StartAddress)
     }
 
     startIndex = ((QWORD)StartAddress - HEAP_START_ADDRESS) / PAGE_SIZE;
-    nrOfPages = (QWORD)(gHeapPages[startIndex]) & 0xFFFF;
+    nrOfPages = (QWORD)(gHeapPages[startIndex]) & 0xFFF;
 
-    if (nrOfPages == 0xFFFF)
+    if (nrOfPages == 0xFFF)
     {
         return;
     }
 
     for (DWORD i = 0; i < nrOfPages; i++)
     {
-        gHeapPages[i] = (VOID*)((QWORD)(gHeapPages[i]) & 0xFFFFFFFFFFFF0000);
+        gHeapPages[i] = (VOID*)((QWORD)(gHeapPages[i]) & 0xFFFFFFFFFFFFF000);
     }
 
     return;

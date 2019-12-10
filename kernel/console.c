@@ -39,13 +39,46 @@ VOID HandleDump()
 VOID HandleHeapTest()
 {
     DWORD size = 0x12743;
+    VOID *addr, *addr2;
+    CHAR text[256], addrTxt[64];
+    
     PrintLine("Allocating 0x12743 bytes");
-    VOID* addr = malloc(size);
+    addr = malloc(size);
+    if (NULL == addr)
+    {
+        PrintLine("malloc failed");
+    }
+
     CHAR* test = "Testing the heap";
     memcpy(addr, test, strlen(test));
     PrintLine(addr);
-    PrintLine("Freeing the heap");
+    
+    text[0] = '\0';
+    strcat(text, "Freeing the heap addr: 0x", 256);
+    itoa((QWORD)addr, addrTxt, 16, FALSE);
+    strcat(text, addrTxt, 256);
+    PrintLine(text);
+
     free(addr);
+    
+    PrintLine("Allocate 0x12743 Twice");
+    addr = malloc(size);
+    addr2 = malloc(size);
+    
+    text[0] = '\0';
+    strcat(text, "First addr: 0x", 256);
+    itoa((QWORD)addr, addrTxt, 16, FALSE);
+    strcat(text, addrTxt, 256);
+    PrintLine(text);
+    
+    text[0] = '\0';
+    strcat(text, "Second addr: 0x", 256);
+    itoa((QWORD)addr2, addrTxt, 16, FALSE);
+    strcat(text, addrTxt, 256);
+    PrintLine(text);
+
+    free(addr);
+    free(addr2);
 }
 
 VOID HandleRead()
