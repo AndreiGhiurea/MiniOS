@@ -27,6 +27,7 @@ typedef unsigned __int8     BOOL, *PBOOL;
 
 typedef struct _CPU_STATE {
     BOOL x2ApicSupported;
+    DWORD BspLapicId;
     QWORD LapicBase;
     QWORD IoApics[16];
     DWORD NrOfIoApics;

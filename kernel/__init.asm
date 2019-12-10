@@ -121,9 +121,12 @@ Realm64:
     mov    edi,    0x9000              ; destination
     rep    movsb                       ; copy the AP startup code to 0x9000
     
+    mov al, 1
+    mov [0x200], al
+
     sgdt [0x100]
 
-    add DWORD [gActiveCpuCount], 1
+    ; add DWORD [gActiveCpuCount], 1
 
     call KernelMain
     
@@ -277,26 +280,19 @@ __dumpTrapFrame:
 
 [BITS 16]
 APStartUpStart:
-    cli                               ; starting RM to PM32 transition
-    lgdt [0x100]
-    mov    eax,    cr0
-    or     al,     1
-    mov    cr0,    eax                ; we are in protected mode but we need to set the CS register  
-    jmp    SEL_CODE32:.APbits32       ; we change the CS to 8 (index of FLAT_DESCRIPTOR_CODE32 entry)
+    mov al, [0x200]
+    add al, 1
+    mov [0x200], al
 
-.APbits32:
-[bits 32]
-    mov    ax,    SEL_DATA32       ; index of FLAT_DESCRIPTOR_DATA32 entry
-    mov    ds,    ax
-    mov    es,    ax      
-    mov    gs,    ax      
-    mov    ss,    ax      
-    mov    fs,    ax 
-    
-    add DWORD [gActiveCpuCount], 1
+    mov ah, 0Ah
+    mov al, [0x200]
+    add al, 48
+    mov bh, 0
+    mov cx, 1
+    int 10h
 
+    cli
     hlt
-[BITS 64]
 APStartUpEnd:    
 
 IMPORTFROMC GenericInt, gActiveCpuCount, PageFaultHandler, KernelMain, DumpTrapFrame, gIdt, Irq0Handler, Irq1Handler, Irq2Handler, Irq3Handler, Irq4Handler, Irq5Handler, Irq6Handler, Irq7Handler, Irq8Handler, Irq9Handler, Irq10Handler, Irq11Handler, Irq12Handler, Irq13Handler, Irq14Handler, Irq15Handler, BreakpointHandler, DumpTrapFrame

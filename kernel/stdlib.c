@@ -1,7 +1,7 @@
 #include "stdlib.h"
 
-BOOL gSleeping = FALSE;
-QWORD gSleepingMs = 0;
+volatile BOOL gSleeping = FALSE;
+volatile QWORD gSleepingMs = 0;
 
 DWORD _strlen(CHAR *_Str)
 {

@@ -74,6 +74,9 @@ VOID EnableX2Apic()
         msrVal = __readmsr(APIC_SVR_REG);
         __writemsr(APIC_SVR_REG, msrVal | 0x100); // Set bit 8
 
+        msrVal = __readmsr(APIC_ID_REG);
+        gCpuState.BspLapicId = (DWORD)msrVal;
+
         gCpuState.x2ApicSupported = TRUE;
     }
     else

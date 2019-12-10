@@ -7,6 +7,7 @@
 #define IOAPICREDTBL(n)   (0x10 + 2 * n) // lower-32bits (add +1 for upper 32-bits)
 
 #define IA32_APIC_BASE_MSR  0x1B
+#define APIC_ID_REG         0x802
 #define APIC_ICR_MSR        0x830
 #define APIC_BASE_MASK      0xFFFFFF000
 #define APIC_EOI_REG        0x80B
@@ -20,7 +21,8 @@
 #define APIC_TMRCURRCNT     0x839
 #define APIC_TMRDIV         0x83E
 
-#define ICR_VALUE_SIPI      0xFF000000000C4609 // SIPI to all processors excluding self, vector number 9 (starting page for SIPI)
+#define ICR_VALUE_IPI       0x0000000000004500
+#define ICR_VALUE_SIPI      0x0000000000004600
 
 void WriteIOApicRegister(const QWORD apic_base, const BYTE offset, const DWORD val);
 DWORD ReadIOApicRegister(const QWORD apic_base, const BYTE offset);

@@ -11,6 +11,11 @@ DWORD gActiveCpuCount;
 
 void KernelMain()
 {
+    CHAR text[256];
+    CHAR auxText[64];
+    LAPIC* pLapic = NULL;
+    QWORD sendVal = 0x0;
+
     __enableSSE();  // only for demo; in the future will be called from __init.asm
 
     ClearScreen();
@@ -41,36 +46,55 @@ void KernelMain()
 
     __sti();
 
-    //__writemsr(APIC_ICR_MSR, 0x00000000000C4500); // Broadcast IPI
-    // Sleep(10);
-    //__writemsr(APIC_ICR_MSR, 0x00000000000C4609); // Broadcast SIPI
-    // Sleep(200);
-    //__writemsr(APIC_ICR_MSR, 0x00000000000C4609); // Broadcast 2nd SIPI
-
-    // Sleep(200);
-
-    // __writemsr(APIC_ICR_MSR, ICR_VALUE_SIPI); // Send a SIPI to all APs
-
-    switch (gActiveCpuCount)
+    volatile BYTE *cpus = (BYTE*)0x200;
+    gActiveCpuCount = *cpus;
+    for (DWORD i = 0; i < gCpuState.NrOfLapics; i++)
     {
-    case 0:
-        PrintLine("0");
-        break;
-    case 1:
-        PrintLine("1");
-        break;
-    case 2:
-        PrintLine("2");
-        break;
-    case 3:
-        PrintLine("3");
-        break;
-    case 4:
-        PrintLine("4");
-        break;
-    default:
-        PrintLine("Hmmm");
+        pLapic = (LAPIC*)gCpuState.Lapics[i];
+
+        if ((QWORD)pLapic->ApicID == gCpuState.BspLapicId)
+        {
+            PrintLine("Don't try to wake BSP");
+            continue;
+        }
+
+        sendVal = ICR_VALUE_IPI | ((QWORD)(pLapic->ApicID) << 32); // Set IPI target
+        __writemsr(APIC_ICR_MSR, sendVal); // Send IPI
+        Sleep(20);
+
+        sendVal = ICR_VALUE_SIPI | ((QWORD)(pLapic->ApicID) << 32) | 9; // Set SIPI target and page 9 (0x9000)
+        __writemsr(APIC_ICR_MSR, sendVal); // Send SIPI
+        Sleep(120);
+
+        if (*cpus == gActiveCpuCount)
+        {
+            // One more SIPI
+            PrintLine("One More SIPI");
+            __writemsr(APIC_ICR_MSR, sendVal); // Send SIPI
+            Sleep(1200);
+        }
+
+        if (*cpus == gActiveCpuCount)
+        {
+            PrintLine("CPU didn't wake abort whole process");
+            break; // Abort wakeup routine
+        }
+
+
+        text[0] = '\0';
+        strcat(text, "CPU woke up. ID: ", 256);
+        itoa(pLapic->ProcessorID, auxText, 16, FALSE);
+        strcat(text, auxText, 256);
+        PrintLine(text);
+
+        gActiveCpuCount = *cpus;
     }
+
+    text[0] = '\0';
+    strcat(text, "Total Nr Or Procs: ", 256);
+    itoa(gActiveCpuCount, auxText, 16, FALSE);
+    strcat(text, auxText, 256);
+    PrintLine(text);
 
     // __interrupt();
 

@@ -11,8 +11,8 @@ QWORD gSeconds;
 BYTE gSecondFractions;
 extern WORD gReadSector[256];
 extern CPU_STATE gCpuState;
-extern BOOL gSleeping;
-extern QWORD gSleepingMs;
+extern volatile BOOL gSleeping;
+extern volatile QWORD gSleepingMs;
 
 static void SignalEoi(BOOL Slave)
 {
