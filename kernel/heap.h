@@ -8,6 +8,8 @@
 
 
 #define malloc                          _malloc
+#define free                            _free
 
 VOID InitHeap();
 VOID* _malloc(DWORD Size);
+VOID  _free(VOID* StartAddress);

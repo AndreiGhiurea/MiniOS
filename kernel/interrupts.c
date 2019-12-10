@@ -141,6 +141,13 @@ void BreakpointHandler(void)
 void PageFaultHandler(void)
 {
     PrintLine("PageFault");
+    __dumpTrapFrame();
+}
+
+void GenericInt(void)
+{
+    PrintLine("BSOD");
+    __dumpTrapFrame();
 }
 
 void Irq0Handler(void)
@@ -279,8 +286,11 @@ static void SetupIdtEntry(DWORD Index, QWORD Address)
 
 void InitIdt()
 {
-    SetupIdtEntry(3, (QWORD)__int3);
-    SetupIdtEntry(14, (QWORD)__int14);
+    // for (DWORD i = 0; i <= 16; i++)
+    // {
+    //     SetupIdtEntry(i, (QWORD)__genericInt);
+    // }
+    
     SetupIdtEntry(32, (QWORD)__irq0);
     SetupIdtEntry(33, (QWORD)__irq1);
     SetupIdtEntry(34, (QWORD)__irq2);

@@ -72,6 +72,7 @@ void Irq14Handler(void);
 void Irq15Handler(void);
 void BreakpointHandler(void);
 void PageFaultHandler(void);
+void GenericInt(void);
 
 // imported from __init.asm
 int __int3(void);
@@ -92,3 +93,4 @@ int __irq12(void);
 int __irq13(void);
 int __irq14(void);
 int __irq15(void);
+int __genericInt(void);

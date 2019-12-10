@@ -235,6 +235,10 @@ __int14:
     call PageFaultHandler
     iretq
 
+__genericInt:
+    call GenericInt
+    iretq
+
 __dumpTrapFrame:
     push rax
     mov rax, cr4
@@ -295,5 +299,5 @@ APStartUpStart:
 [BITS 64]
 APStartUpEnd:    
 
-IMPORTFROMC gActiveCpuCount, PageFaultHandler, KernelMain, DumpTrapFrame, gIdt, Irq0Handler, Irq1Handler, Irq2Handler, Irq3Handler, Irq4Handler, Irq5Handler, Irq6Handler, Irq7Handler, Irq8Handler, Irq9Handler, Irq10Handler, Irq11Handler, Irq12Handler, Irq13Handler, Irq14Handler, Irq15Handler, BreakpointHandler, DumpTrapFrame
-EXPORT2C __int14, ASMEntryPoint, __dumpTrapFrame, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, __irq0, __irq1, __irq2, __irq3, __irq4, __irq5, __irq6, __irq7, __irq8, __irq9, __irq10, __irq11, __irq12, __irq13, __irq14, __irq15, __int3
+IMPORTFROMC GenericInt, gActiveCpuCount, PageFaultHandler, KernelMain, DumpTrapFrame, gIdt, Irq0Handler, Irq1Handler, Irq2Handler, Irq3Handler, Irq4Handler, Irq5Handler, Irq6Handler, Irq7Handler, Irq8Handler, Irq9Handler, Irq10Handler, Irq11Handler, Irq12Handler, Irq13Handler, Irq14Handler, Irq15Handler, BreakpointHandler, DumpTrapFrame
+EXPORT2C __genericInt, __int14, ASMEntryPoint, __dumpTrapFrame, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, __irq0, __irq1, __irq2, __irq3, __irq4, __irq5, __irq6, __irq7, __irq8, __irq9, __irq10, __irq11, __irq12, __irq13, __irq14, __irq15, __int3

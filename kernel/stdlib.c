@@ -28,6 +28,16 @@ static VOID reverse(CHAR *str, DWORD length)
     }
 }
 
+VOID _memcpy(VOID* Dest, VOID* Source, DWORD Size)
+{
+    for (DWORD i = 0; i < Size; i++)
+    {
+        ((BYTE*)Dest)[i] = ((BYTE*)Source)[i];
+    }
+
+    return;
+}
+
 // Implementation of itoa() 
 VOID _itoa(QWORD num, CHAR* str, DWORD base, BOOL reversed)
 {
@@ -97,14 +107,6 @@ VOID _strcat(CHAR* Dest, CHAR *Buf, DWORD Size)
     Dest[i] = '\0';
 
     return;
-}
-
-VOID _memset(BYTE* Dest, BYTE Val, DWORD Size)
-{
-    for (DWORD i = 0; i < Size; i++)
-    {
-        Dest[i] = Val;
-    }
 }
 
 VOID Sleep(DWORD Miliseconds)

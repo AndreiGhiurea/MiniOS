@@ -58,7 +58,7 @@ VOID* _malloc(DWORD Size)
     return NULL;
 }
 
-VOID free(VOID* StartAddress)
+VOID _free(VOID* StartAddress)
 {
     DWORD nrOfPages;
     QWORD startIndex;
