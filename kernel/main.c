@@ -2,8 +2,6 @@
 #include "screen.h"
 #include "interrupts.h"
 #include "stdlib.h"
-#include "mp.h"
-#include "apic.h"
 #include "heap.h"
 
 CPU_STATE gCpuState;
@@ -18,20 +16,7 @@ void KernelMain()
     ScreenSetHeader("MiniOS", BLACK_COLOR, CURRENT_COLOR);
     ScreenSetClock(0, BLACK_COLOR, CURRENT_COLOR);
 
-    EnableX2Apic();
-
-    FindAllApics();
-         
-    if (gCpuState.x2ApicSupported)
-    {
-        // Remap PIC and mask all interrupt to disable them
-        InitPics(0x20, 0x28, 0xFF, 0xFF);
-        InitApicIrqs();
-    }
-    else
-    {
-        InitPics(0x20, 0x28, 0x00, 0x00);
-    }
+    InitPics(0x20, 0x28, 0x00, 0x00);
 
     InitIdt();
 

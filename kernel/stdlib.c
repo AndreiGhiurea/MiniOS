@@ -1,5 +1,8 @@
 #include "stdlib.h"
 
+BOOL gSleeping = FALSE;
+QWORD gSleepingMs = 0;
+
 DWORD _strlen(CHAR *_Str)
 {
     DWORD len = 0;
@@ -23,6 +26,16 @@ static VOID reverse(CHAR *str, DWORD length)
         start++;
         end--;
     }
+}
+
+VOID _memcpy(VOID* Dest, VOID* Source, DWORD Size)
+{
+    for (DWORD i = 0; i < Size; i++)
+    {
+        ((BYTE*)Dest)[i] = ((BYTE*)Source)[i];
+    }
+
+    return;
 }
 
 // Implementation of itoa() 
@@ -96,10 +109,13 @@ VOID _strcat(CHAR* Dest, CHAR *Buf, DWORD Size)
     return;
 }
 
-VOID _memset(BYTE* Dest, BYTE Val, DWORD Size)
+VOID Sleep(DWORD Miliseconds)
 {
-    for (DWORD i = 0; i < Size; i++)
+    gSleepingMs = 0;
+    gSleeping = TRUE;
+    while (gSleepingMs < Miliseconds)
     {
-        Dest[i] = Val;
+        ;
     }
+    gSleeping = FALSE;
 }

@@ -1,6 +1,7 @@
 #include "console.h"
 #include "screen.h"
 #include "stdlib.h"
+#include "heap.h"
 
 WORD gReadSector[256];
 
@@ -18,6 +19,10 @@ VOID HandleCommand(CHAR* Buffer)
     {
         HandleDump();
     }
+    else if (0 == strcmp(Buffer, "memtest"))
+    {
+        HandleHeapTest();
+    }
     else
     {
         PrintLine("[ERROR] Invalid Command");
@@ -30,6 +35,18 @@ VOID HandleDump()
     PrintLine((CHAR*)gReadSector);
 }
 
+
+VOID HandleHeapTest()
+{
+    DWORD size = 0x12743;
+    PrintLine("Allocating 0x12743 bytes");
+    VOID* addr = malloc(size);
+    CHAR* test = "Testing the heap";
+    memcpy(addr, test, strlen(test));
+    PrintLine(addr);
+    PrintLine("Freeing the heap");
+    free(addr);
+}
 
 VOID HandleRead()
 {

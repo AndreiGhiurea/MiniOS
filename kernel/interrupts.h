@@ -50,6 +50,7 @@ typedef struct _TRAP_FRAME {
 #define ICW1 0x11
 #define ICW4 0x01
 
+void InitPics(BYTE pic1, BYTE pic2, BYTE mask1, BYTE mask2);
 void InitIdt();
 void InitPit(DWORD frequency);
 
@@ -70,9 +71,12 @@ void Irq13Handler(void);
 void Irq14Handler(void);
 void Irq15Handler(void);
 void BreakpointHandler(void);
+void PageFaultHandler(void);
+void GenericInt(void);
 
 // imported from __init.asm
 int __int3(void);
+int __int14(void);
 int __irq0(void);
 int __irq1(void);
 int __irq2(void);
@@ -89,3 +93,4 @@ int __irq12(void);
 int __irq13(void);
 int __irq14(void);
 int __irq15(void);
+int __genericInt(void);

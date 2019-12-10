@@ -24,7 +24,7 @@ for i in range(1, params):
 # add padding until sector 10 (hardcoded start for kernel.exe) offset 5120 | 0x1400
 size = out.tell()
 for i in range(0, ((512*10) - size)):
-    out.write('\0')
+    out.write('\0'.encode())
 
 if (os.path.getsize(kernelPath) > 50*512):
     print("\n Warning: Kernel size > 50 sectors!\n")
@@ -38,7 +38,7 @@ time.sleep(1)
 size = out.tell()
 #print "Adding padding from %d to %d ...\n"%(size, flpSize)
 for i in range(0, (flpSize - size)):
-    out.write('\0')
+    out.write('\0'.encode())
 
 #cleanup
 out.close()
