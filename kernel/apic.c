@@ -42,6 +42,11 @@ VOID InitApicIrqs()
         val = 0xFF00000000000820;
         WriteIOApicRegister(ioApicAddress, 0x14, val & 0xFFFFFFFF);
         WriteIOApicRegister(ioApicAddress, 0x15, val >> 32);
+
+        // IRQ14 - ATA
+        val = 0xFF0000000000082E;
+        WriteIOApicRegister(ioApicAddress, 0x2C, val & 0xFFFFFFFF);
+        WriteIOApicRegister(ioApicAddress, 0x2D, val >> 32);
     }
 }
 
