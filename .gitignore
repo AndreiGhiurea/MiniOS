@@ -61,3 +61,7 @@ kernel/x64
 kernel/kernel.VC.db
 bx_enh_dbg.ini
 *.vmdk
+*.suo
+*.exe
+bin/floppy.img
+*.lck
