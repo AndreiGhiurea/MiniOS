@@ -1,6 +1,6 @@
 %define break xchg bx, bx
 
-KERNEL_SECTORS equ 50
+KERNEL_SECTORS equ 55
 
 [org 0x7E00]
 [bits 16]

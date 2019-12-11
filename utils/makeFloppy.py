@@ -26,8 +26,8 @@ size = out.tell()
 for i in range(0, ((512*10) - size)):
     out.write('\0'.encode())
 
-if (os.path.getsize(kernelPath) > 50*512):
-    print("\n Warning: Kernel size > 50 sectors!\n")
+if (os.path.getsize(kernelPath) > 55*512):
+    print("\n Warning: Kernel size > 55 sectors!\n")
     
 #write the kernel
 out.write(open(kernelPath, "rb").read())
