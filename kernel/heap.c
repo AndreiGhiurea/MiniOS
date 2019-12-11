@@ -85,7 +85,7 @@ VOID _free(VOID* StartAddress)
         return;
     }
 
-    for (DWORD i = 0; i < nrOfPages; i++)
+    for (QWORD i = startIndex; i < startIndex + nrOfPages; i++)
     {
         gHeapPages[i] = (VOID*)((QWORD)(gHeapPages[i]) & 0xFFFFFFFFFFFFF000);
     }
