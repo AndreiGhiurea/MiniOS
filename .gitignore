@@ -60,3 +60,7 @@ dkms.conf
 kernel/x64
 kernel/kernel.VC.db
 bx_enh_dbg.ini
+*.suo
+*.exe
+bin/floppy.img
+*.lck
