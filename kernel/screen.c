@@ -83,14 +83,15 @@ void EnterPressed()
 
 void ScrollScreen()
 {
-    for (int i = CHARS_PER_LINE * 2; i < MAX_OFFSET; i++)
-    {
-        gVideo[i - CHARS_PER_LINE] = gVideo[i];
-    }
+    PSCREEN screen = (PSCREEN)(SCREEN_BASE_ADDRESS);
+    PSCREEN screenPlusOne = (PSCREEN)(SCREEN_BASE_ADDRESS);
+    
+    screen += CHARS_PER_LINE; // Skip header
+    screenPlusOne += 2 * CHARS_PER_LINE; // Skip header and next line
 
-    for (int i = CHARS_PER_LINE * (MAX_LINES - 1); i < MAX_OFFSET; i++)
+    for (int i = 0; i < MAX_OFFSET - CHARS_PER_LINE; i++)
     {
-        gVideo[i].c = ' ';
+        screen[i] = screenPlusOne[i];
     }
 
     gCurrLine--;
