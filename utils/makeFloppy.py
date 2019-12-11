@@ -21,9 +21,10 @@ for i in range(1, params):
     out.write(open(tmpPath, "rb").read())
 
 
-# add padding until sector 10 (hardcoded start for kernel.exe) offset 5120 | 0x1400
+# add padding until sector 18 (hardcoded start for kernel.exe) offset 5120 | 0x1400
 size = out.tell()
-for i in range(0, ((512*10) - size)):
+print("Size of ssl", size)
+for i in range(0, ((512*18) - size)):
     out.write('\0'.encode())
 
 if (os.path.getsize(kernelPath) > 55*512):
