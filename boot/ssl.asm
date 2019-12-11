@@ -1,23 +1,23 @@
 %define break xchg bx, bx
 
-KERNEL_SECTORS equ 55
+KERNEL_SECTORS equ 18
 
 [org 0x7E00]
 [bits 16]
-SSL:    
+SSL: 
     mov    ah,    02h               ; parameters for calling int13 (ReadSectors) - read the Kernel
     mov    al,    KERNEL_SECTORS    ; read KERNEL_SECTORS sectors (hardcoded space for Kernel)
-    mov    ch,    00h     
-    mov    cl,    0Bh               ; starting from sector 11 - skip first 10 sectors (the MBR + SSL)
-    mov    dh,    00h     
-    mov    bx,    0x9200            ; memory from 0x7E00 - 0x9200 used by SLL;  0x9200 - 0x9FFFF is unused
-    int    13h             
+    mov    ch,    [cylinder]     
+    mov    cl,    01h               ; starting from sector 1 - skip first 18 sectors (the MBR + SSL)
+    mov    dh,    [head]     
+    mov    bx,    0xA200            ; memory from 0x7E00 - 0x9200 used by SLL;  0x9200 - 0x9FFFF is unused
+    int    13h           
     jnc    .success        
-  
+    
     cli                    ; we should reset drive and retry, but we hlt
     hlt                     
- 
-.success:                      
+
+.success:                  
     cli                    ; starting RM to PM32 transition
     lgdt   [GDT]
     mov    eax,    cr0
@@ -36,10 +36,52 @@ SSL:
     
     cld
     mov    ecx,    KERNEL_SECTORS*512  ; KERNEL_SECTORS * sector_size
-    mov    esi,    0x9200              ; source
-    mov    edi,    0x200000            ; destination
+    mov    esi,    0xA200              ; source
+    mov    edi,    [kernelAddr]        ; destination
     rep    movsb                       ; copy the kernel from 0x9200 to 0x200000
-    
+
+    sub    [nrOfReads], BYTE 1
+    mov    al, [nrOfReads]
+    cmp    al, 0
+    je     .continue
+
+    ; Setup next read
+    add    [kernelAddr], DWORD 0x2400
+    mov    al, [head]
+    cmp    al, 1
+    je     .incCylinder
+
+    mov    [head], BYTE 1
+    jmp    .leaveCylinder
+
+.incCylinder:
+    add    [cylinder], BYTE 1
+    mov    [head], BYTE 0
+
+.leaveCylinder:
+    ; Jump back to 16 bits
+    jmp SEL_CODE16:.bits16
+
+.bits16:
+[bits 16]
+    mov eax, cr0
+    and al, 0xFE
+    mov cr0, eax
+
+    jmp SEL_NULL:.rmBits16
+
+.rmBits16:  
+    mov ax, SEL_NULL
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    jmp SSL
+
+.continue:
+[bits 32]
     mov    [ds:0xb8000], BYTE 'O'
     mov    [ds:0xb8002], BYTE 'K'
 
@@ -72,6 +114,11 @@ A20_on:
 ;
 ; Data
 ;
+kernelAddr dd 0x200000
+nrOfReads  db 10
+cylinder   db 0
+head       db 1
+
 GDT:
     .limit  dw  GDTTable.end - GDTTable - 1
     .base   dd  GDTTable
