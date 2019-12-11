@@ -6,7 +6,6 @@
 #define HEAP_SIZE                       HEAP_NR_OF_PAGES * PAGE_SIZE
 #define HEAP_END_ADDRESS                HEAP_START_ADDRESS + HEAP_SIZE  
 
-
 #define malloc                          _malloc
 #define free                            _free
 
