@@ -114,19 +114,17 @@ Realm64:
     mov     ss, ax
 
     ; Reloc AP startup code
-    cld
-    mov    ecx,    APStartUpEnd
-    sub    ecx,    APStartUpStart
-    mov    esi,    APStartUpStart      ; source
-    mov    edi,    0x9000              ; destination
-    rep    movsb                       ; copy the AP startup code to 0x9000
+    ; cld
+    ; mov    ecx,    APStartUpEnd
+    ; sub    ecx,    APStartUpStart
+    ; mov    esi,    APStartUpStart      ; source
+    ; mov    edi,    0x9000              ; destination
+    ; rep    movsb                       ; copy the AP startup code to 0x9000
     
     mov al, 1
     mov [0x200], al
 
-    sgdt [0x100]
-
-    ; add DWORD [gActiveCpuCount], 1
+    sgdt [0x7900]
 
     call KernelMain
     
@@ -277,23 +275,6 @@ __dumpTrapFrame:
     add rsp, 20h
     add rsp, 8 * 24
     ret
-
-[BITS 16]
-APStartUpStart:
-    mov al, [0x200]
-    add al, 1
-    mov [0x200], al
-
-    mov ah, 0Ah
-    mov al, [0x200]
-    add al, 48
-    mov bh, 0
-    mov cx, 1
-    int 10h
-
-    cli
-    hlt
-APStartUpEnd:    
 
 IMPORTFROMC GenericInt, gActiveCpuCount, PageFaultHandler, KernelMain, DumpTrapFrame, gIdt, Irq0Handler, Irq1Handler, Irq2Handler, Irq3Handler, Irq4Handler, Irq5Handler, Irq6Handler, Irq7Handler, Irq8Handler, Irq9Handler, Irq10Handler, Irq11Handler, Irq12Handler, Irq13Handler, Irq14Handler, Irq15Handler, BreakpointHandler, DumpTrapFrame
 EXPORT2C __genericInt, __int14, ASMEntryPoint, __dumpTrapFrame, __interrupt, __halt, __cli, __sti, __magic, __enableSSE, __load_idt, __irq0, __irq1, __irq2, __irq3, __irq4, __irq5, __irq6, __irq7, __irq8, __irq9, __irq10, __irq11, __irq12, __irq13, __irq14, __irq15, __int3

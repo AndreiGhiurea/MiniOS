@@ -62,7 +62,7 @@ void KernelMain()
         __writemsr(APIC_ICR_MSR, sendVal); // Send IPI
         Sleep(20);
 
-        sendVal = ICR_VALUE_SIPI | ((QWORD)(pLapic->ApicID) << 32) | 9; // Set SIPI target and page 9 (0x9000)
+        sendVal = ICR_VALUE_SIPI | ((QWORD)(pLapic->ApicID) << 32) | 8; // Set SIPI target and page 8 (0x8000)
         __writemsr(APIC_ICR_MSR, sendVal); // Send SIPI
         Sleep(120);
 

@@ -15,15 +15,24 @@ if (params < 2):
 out = open(floppyPath, "wb")
     
 #iterate files and compile them and add them to the floppy
-for i in range(1, params):
-    #print "Compiling %s"%(sys.argv[i])
+for i in range(1, params - 1):
     os.system(nasmCommand%(sys.argv[i]))
     out.write(open(tmpPath, "rb").read())
+    print("Assembling: ", sys.argv[i])
 
-
-# add padding until sector 18 (hardcoded start for kernel.exe) offset 5120 | 0x1400
+# add padding until sector 10 (hardcoded start for kernel.exe) offset 0x9000
+# we now have 8 more sectors free for AP code, because in SSL we read the kernel starting from sector 18
 size = out.tell()
-print("Size of ssl", size)
+for i in range(0, ((512*2) - size)):
+    out.write('\0'.encode())
+
+for i in range(params - 1, params):
+    os.system(nasmCommand%(sys.argv[i]))
+    out.write(open(tmpPath, "rb").read())
+    print("Assembling: ", sys.argv[i])
+
+# add 8 more sectors after AP code to reach 18
+size = out.tell()
 for i in range(0, ((512*18) - size)):
     out.write('\0'.encode())
 
