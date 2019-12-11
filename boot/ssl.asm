@@ -10,7 +10,7 @@ SSL:
     mov    ch,    [cylinder]     
     mov    cl,    01h               ; starting from sector 1 - skip first 18 sectors (the MBR + SSL)
     mov    dh,    [head]     
-    mov    bx,    0xA200            ; memory from 0x7E00 - 0x9200 used by SLL;  0x9200 - 0x9FFFF is unused
+    mov    bx,    0xA200            ; memory from 0x7E00 - 0xA200 used by SLL;  0xA200 - 0x9FFFF is unused
     int    13h           
     jnc    .success        
     
