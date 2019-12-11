@@ -27,8 +27,8 @@ print("Size of ssl", size)
 for i in range(0, ((512*18) - size)):
     out.write('\0'.encode())
 
-if (os.path.getsize(kernelPath) > 55*512):
-    print("\n Warning: Kernel size > 55 sectors!\n")
+if (os.path.getsize(kernelPath) > 180*512):
+    print("\n Warning: Kernel size > 180 sectors!\n")
     
 #write the kernel
 out.write(open(kernelPath, "rb").read())
